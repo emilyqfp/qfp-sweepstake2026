@@ -368,10 +368,7 @@ async function fetchMatches(){
   try{
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),5000);
-    const res=await fetch('https://api.football-data.org/v4/competitions/WC/matches',{
-      headers:{'X-Auth-Token':'c59da080b24b4d82ba842f93986dcc47'},
-      signal:controller.signal
-    });
+    const res=await fetch('/api/matches',{signal:controller.signal});
     clearTimeout(timeout);
     if(res.ok){
       const data=await res.json();
