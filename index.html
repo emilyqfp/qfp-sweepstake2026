@@ -67,6 +67,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--dark);min-height:1
 .ltt{font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;background:var(--gg-tint);color:var(--gg-dark);border:1px solid var(--gg-light)}
 .ltt.out{background:var(--subtle);color:var(--faint);border-color:var(--border);text-decoration:line-through;opacity:.6}
 .lp2{font-size:13px;font-weight:800;color:var(--gg-dark);min-width:40px;text-align:right;padding-top:1px}
+.lr.gold{background:linear-gradient(135deg,#fffbe6,#fff8d0);border-left:4px solid #FFD700}
+.lr.silver{background:linear-gradient(135deg,#f8f8f8,#efefef);border-left:4px solid #C0C0C0}
+.lr.bronze{background:linear-gradient(135deg,#fff5ee,#fdebd0);border-left:4px solid #CD7F32}
+.lr.gold .ln{color:#8B6914;font-size:15px}
+.lr.silver .ln{color:#555;font-size:14px}
+.lr.bronze .ln{color:#7B4A1E;font-size:14px}
+.lr.gold .lp2{color:#B8860B;font-size:16px}
+.lr.silver .lp2{color:#555;font-size:15px}
+.lr.bronze .lp2{color:#8B4513;font-size:14px}
 .explainer{background:var(--gg-tint);border:1px solid var(--gg-light);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--gg-dark);cursor:pointer;display:flex;align-items:center;justify-content:space-between}
 .explainer-body{font-size:12px;color:var(--mid);padding:10px 14px;background:var(--gg-tint);border:1px solid var(--gg-light);border-top:none;border-radius:0 0 8px 8px;margin-top:-4px;margin-bottom:14px;display:none;line-height:1.6}
 .explainer-body.open{display:block}
@@ -312,9 +321,10 @@ function renderSweeps(){
   h+='<div class="sl" style="margin-bottom:8px;margin-top:14px">Standings</div><div class="card">';
   for(var i=0;i<ranked.length;i++){
     var r=ranked[i];
-    var medal=i<3?'<span style="font-size:13px">'+(i===0?'[1]':i===1?'[2]':'[3]')+'</span>':'<span style="font-size:11px;color:var(--faint);font-weight:700">'+(i+1)+'</span>';
+    var posClass=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    var medal=i===0?'<span style="font-size:20px">&#127945;</span>':i===1?'<span style="font-size:20px">&#129352;</span>':i===2?'<span style="font-size:20px">&#129353;</span>':'<span style="font-size:11px;color:var(--faint);font-weight:700">'+(i+1)+'</span>';
     var teamPills=r.teams.map(function(t){return '<span class="ltt'+(r.elim[t]?' out':'')+'">'+getFlag(t)+' '+t+'</span>';}).join('');
-    h+='<div class="lr"><div class="lrk">'+medal+'</div><div class="li"><div class="ln">'+r.owner+'</div><div class="lt">'+teamPills+'</div></div><span class="lp2">'+r.pts+'pts</span></div>';
+    h+='<div class="lr '+posClass+'"><div class="lrk">'+medal+'</div><div class="li"><div class="ln">'+r.owner+'</div><div class="lt">'+teamPills+'</div></div><span class="lp2">'+r.pts+'pts</span></div>';
   }
   h+='</div>';
   document.getElementById('tab-sweeps').innerHTML=h;
@@ -418,9 +428,10 @@ function renderLeaderboard(){
   h+='<div class="sl" style="margin-bottom:8px">Standings</div><div class="card">';
   for(var i=0;i<ranked.length;i++){
     var r=ranked[i];
-    var medal=i<3?'<span style="font-size:13px">'+(i===0?'[1]':i===1?'[2]':'[3]')+'</span>':'<span style="font-size:11px;color:var(--faint);font-weight:700">'+(i+1)+'</span>';
+    var posClass=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    var medal=i===0?'<span style="font-size:20px">&#127945;</span>':i===1?'<span style="font-size:20px">&#129352;</span>':i===2?'<span style="font-size:20px">&#129353;</span>':'<span style="font-size:11px;color:var(--faint);font-weight:700">'+(i+1)+'</span>';
     var teamPills=r.teams.map(function(t){return '<span class="ltt'+(r.elim[t]?' out':'')+'">'+getFlag(t)+' '+t+'</span>';}).join('');
-    h+='<div class="lr"><div class="lrk">'+medal+'</div><div class="li"><div class="ln">'+r.owner+'</div><div class="lrec">'+r.wins+'W '+r.draws+'D '+r.losses+'L</div><div class="lt">'+teamPills+'</div></div><span class="lp2">'+r.pts+'pts</span></div>';
+    h+='<div class="lr '+posClass+'"><div class="lrk">'+medal+'</div><div class="li"><div class="ln">'+r.owner+'</div><div class="lrec">'+r.wins+'W '+r.draws+'D '+r.losses+'L</div><div class="lt">'+teamPills+'</div></div><span class="lp2">'+r.pts+'pts</span></div>';
   }
   h+='</div>';
   document.getElementById('tab-leaderboard').innerHTML=h;
