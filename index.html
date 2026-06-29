@@ -309,7 +309,7 @@ function renderSweeps(){
   var clashesToday=todayMs.filter(function(m){var o1=getOwner(m.team1),o2=getOwner(m.team2);return o1&&o2&&o1!==o2;});
   var medals=['1st','2nd','3rd'];
   var h='<div class="sweep-hero"><div class="sweep-eyebrow">QFP - World Cup 2026</div><div class="sweep-title">THE <span>DRAW</span></div><div class="sweep-sub">'+played+' matches played - '+SWEEPSTAKE.length+' participants</div></div>';
-  h+='<div class="sl" style="margin-bottom:8px">Prizes</div><div class="prize-grid"><div class="prize-card"><div class="prize-label">Winner</div><div class="prize-amount">TBC</div><div class="prize-desc">Tournament winner - 19 July</div></div><div class="prize-card"><div class="prize-label">Leaderboard</div><div class="prize-amount">TBC</div><div class="prize-desc">Most points - 2nd prize</div></div></div>';
+  h+='<div class="sl" style="margin-bottom:8px">Prizes</div><div class="prize-grid"><div class="prize-card" style="border-top:3px solid #FFD700"><div class="prize-label">&#127945; 1st Prize - 80%</div><div class="prize-amount" style="color:#B8860B">&#163;136</div><div class="prize-desc">Whose team wins the World Cup</div></div><div class="prize-card" style="border-top:3px solid #C0C0C0"><div class="prize-label">&#129352; 2nd Prize - 20%</div><div class="prize-amount" style="color:#555">&#163;34</div><div class="prize-desc">Top of the leaderboard</div></div></div><div class="prize-grid"><div class="prize-card" style="border-top:3px solid #CD7F32"><div class="prize-label">&#129353; 3rd Prize</div><div class="prize-amount" style="color:#8B4513">&#163;10</div><div class="prize-desc">Money back - tournament 3rd place</div></div><div class="prize-card" style="background:var(--gg-tint);border:1px solid var(--gg-light)"><div class="prize-label">Total pot</div><div class="prize-amount" style="color:var(--gg-dark)">&#163;170</div><div class="prize-desc">17 players x &#163;10</div></div></div>';
   if(clashesToday.length){
     h+='<div class="sl" style="margin-bottom:8px">QFP clashes today</div><div class="card">';
     for(var i=0;i<clashesToday.length;i++){
@@ -319,10 +319,11 @@ function renderSweeps(){
     h+='</div>';
   }
   h+='<div class="sl" style="margin-bottom:8px;margin-top:14px">Standings</div><div class="card">';
-  for(var i=0;i<ranked.length;i++){
+  var pos=1;for(var i=0;i<ranked.length;i++){
+    if(i>0&&ranked[i].pts<ranked[i-1].pts)pos=i+1;
     var r=ranked[i];
-    var posClass=i===0?'gold':i===1?'silver':i===2?'bronze':'';
-    var medal=i===0?'<span style="font-size:20px">&#127945;</span>':i===1?'<span style="font-size:20px">&#129352;</span>':i===2?'<span style="font-size:20px">&#129353;</span>':'<span style="font-size:11px;color:var(--faint);font-weight:700">'+(i+1)+'</span>';
+    var posClass=pos===1?'gold':pos===2?'silver':pos===3?'bronze':'';
+    var medal=pos===1?'<span style="font-size:20px">&#127945;</span>':pos===2?'<span style="font-size:20px">&#129352;</span>':pos===3?'<span style="font-size:20px">&#129353;</span>':'<span style="font-size:11px;color:var(--faint);font-weight:700">'+pos+'</span>';
     var teamPills=r.teams.map(function(t){return '<span class="ltt'+(r.elim[t]?' out':'')+'">'+getFlag(t)+' '+t+'</span>';}).join('');
     h+='<div class="lr '+posClass+'"><div class="lrk">'+medal+'</div><div class="li"><div class="ln">'+r.owner+'</div><div class="lt">'+teamPills+'</div></div><span class="lp2">'+r.pts+'pts</span></div>';
   }
@@ -426,10 +427,11 @@ function renderLeaderboard(){
   h+='<div class="explainer" onclick="toggleExplainer()"><span>How are points calculated?</span><span id="exp-arrow">+</span></div>';
   h+='<div class="explainer-body'+(explainerOpen?' open':'')+'" id="explainer-body">Win = 3pts, Draw = 1pt each, Loss = 0pts. Points add up across all your assigned teams.</div>';
   h+='<div class="sl" style="margin-bottom:8px">Standings</div><div class="card">';
-  for(var i=0;i<ranked.length;i++){
+  var pos=1;for(var i=0;i<ranked.length;i++){
+    if(i>0&&ranked[i].pts<ranked[i-1].pts)pos=i+1;
     var r=ranked[i];
-    var posClass=i===0?'gold':i===1?'silver':i===2?'bronze':'';
-    var medal=i===0?'<span style="font-size:20px">&#127945;</span>':i===1?'<span style="font-size:20px">&#129352;</span>':i===2?'<span style="font-size:20px">&#129353;</span>':'<span style="font-size:11px;color:var(--faint);font-weight:700">'+(i+1)+'</span>';
+    var posClass=pos===1?'gold':pos===2?'silver':pos===3?'bronze':'';
+    var medal=pos===1?'<span style="font-size:20px">&#127945;</span>':pos===2?'<span style="font-size:20px">&#129352;</span>':pos===3?'<span style="font-size:20px">&#129353;</span>':'<span style="font-size:11px;color:var(--faint);font-weight:700">'+pos+'</span>';
     var teamPills=r.teams.map(function(t){return '<span class="ltt'+(r.elim[t]?' out':'')+'">'+getFlag(t)+' '+t+'</span>';}).join('');
     h+='<div class="lr '+posClass+'"><div class="lrk">'+medal+'</div><div class="li"><div class="ln">'+r.owner+'</div><div class="lrec">'+r.wins+'W '+r.draws+'D '+r.losses+'L</div><div class="lt">'+teamPills+'</div></div><span class="lp2">'+r.pts+'pts</span></div>';
   }
