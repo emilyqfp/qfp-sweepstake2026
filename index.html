@@ -119,6 +119,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--dark);min-height:1
 .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
 @keyframes dp{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 .today-btn{font-family:var(--font);font-size:11px;font-weight:600;color:var(--gg-dark);background:var(--gg-tint);border:1px solid var(--gg-light);border-radius:20px;padding:5px 14px;cursor:pointer}
+.bracket-scroll{overflow-x:auto;margin:0 -16px;padding:0 16px}
+.bracket-cols{display:flex;gap:14px;min-width:max-content;padding-bottom:8px}
+.bracket-col{width:220px;flex-shrink:0}
+.bracket-col-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;text-align:center;background:var(--subtle);padding:6px;border-radius:6px}
+.bracket-tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.bracket-tile-date{font-size:8px;font-weight:700;color:var(--muted);letter-spacing:1px;text-align:center;padding:4px;background:var(--subtle)}
+.bracket-tile-team{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--bl)}
+.bracket-tile-team:last-of-type{border-bottom:none}
+.bracket-tile-team.winner{background:var(--gg-tint)}
+.bracket-tile-flag{font-size:15px;flex-shrink:0}
+.bracket-tile-name{font-size:12px;font-weight:500;color:var(--dark);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bracket-tile-name.tbd{color:var(--faint);font-style:italic}
+.bracket-tile-team.winner .bracket-tile-name{font-weight:700}
+.bracket-tile-owner{font-size:8px;font-weight:600;color:var(--muted);background:var(--subtle);padding:1px 5px;border-radius:3px;white-space:nowrap}
+.bracket-tile-owner.clash{background:var(--ot);color:var(--orange)}
+.bracket-tile-score{font-size:14px;font-weight:800;color:var(--dark);min-width:16px;text-align:right}
+.bracket-tile-pens{font-size:9px;font-weight:600;color:var(--orange);text-align:center;padding:3px;background:var(--ot)}
 .bracket-owner{font-size:9px;font-weight:600;color:var(--muted);background:var(--subtle);padding:1px 5px;border-radius:3px;margin-left:auto;white-space:nowrap}
 .bracket-owner.clash{background:var(--gg-tint);color:var(--gg-dark)}
 .pitch-wrap{background:#2d6a35;border-radius:12px;padding:16px;position:relative;overflow:hidden;margin-bottom:12px}
@@ -722,43 +739,44 @@ function copyBulletin(){
 
 function renderBracket(){
   var koStages=['Round of 32','Round of 16','Quarter-finals','Semi-finals','Third-place','Final'];
-  var stageColors={'Round of 32':'#1e4f8a','Round of 16':'#1a5c2e','Quarter-finals':'#6b21a8','Semi-finals':'#92400e','Third-place':'#555','Final':'#b45309'};
-  var h='<div class="sl" style="margin-bottom:10px">Tournament bracket</div>';
+  var stageLabel2={'Round of 32':'R32','Round of 16':'Round of 16','Quarter-finals':'Quarters','Semi-finals':'Semis','Third-place':'3rd Place','Final':'Final'};
+  var h='<div class="sl" style="margin-bottom:10px">Tournament bracket - who plays who</div>';
+  h+='<div class="bracket-scroll"><div class="bracket-cols">';
   for(var si=0;si<koStages.length;si++){
     var stage=koStages[si];
     var ms=allMatches.filter(function(m){return m.stage===stage;});
     if(!ms.length)continue;
-    var col=stageColors[stage]||'#333';
-    h+='<div style="margin-bottom:16px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:4px;height:16px;border-radius:2px;background:'+col+'"></div><span style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase">'+stage+'</span></div>';
+    h+='<div class="bracket-col"><div class="bracket-col-title">'+stageLabel2[stage]+'</div>';
     for(var mi=0;mi<ms.length;mi++){
       var m=ms[mi];
       var o1=getOwner(m.team1),o2=getOwner(m.team2);
       var isClash=o1&&o2&&o1!==o2;
       var w1=m.status==='finished'&&(m.score1>m.score2||(m.penaltyWinner&&m.penaltyWinner===m.team1));
       var w2=m.status==='finished'&&(m.score2>m.score1||(m.penaltyWinner&&m.penaltyWinner===m.team2));
-      var isTBD=m.team1==='TBD'&&m.team2==='TBD';
-      var timeStr=m.utcDate?new Date(m.utcDate).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' '+localTime(m.utcDate):'TBC';
-      h+='<div style="background:var(--surface);border:1px solid var(--border);border-left:4px solid '+col+';border-radius:0 8px 8px 0;margin-bottom:6px;overflow:hidden">';
-      h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--bl)'+(w1?';background:var(--gg-tint)':'')+'">';
-      h+='<span style="font-size:16px">'+getFlag(m.team1)+'</span>';
-      h+='<span style="font-size:13px;font-weight:'+(w1?700:400)+';color:var(--dark);flex:1">'+(isTBD?'TBD':m.team1)+'</span>';
-      if(o1)h+='<span style="font-size:9px;font-weight:600;color:'+(isClash?'var(--gg-dark)':'var(--muted)')+';background:'+(isClash?'var(--gg-tint)':'var(--subtle)')+';padding:1px 6px;border-radius:3px">'+o1+'</span>';
-      if(m.status!=='scheduled'&&m.score1!==null)h+='<span style="font-size:15px;font-weight:800;color:'+(w1?'var(--gg-dark)':'var(--faint)')+';min-width:20px;text-align:right">'+m.score1+'</span>';
+      var isTBD1=m.team1==='TBD';
+      var isTBD2=m.team2==='TBD';
+      var dateStr=m.utcDate?new Date(m.utcDate).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).toUpperCase():'TBC';
+      h+='<div class="bracket-tile">';
+      h+='<div class="bracket-tile-date">'+dateStr+'</div>';
+      h+='<div class="bracket-tile-team'+(w1?' winner':'')+'">';
+      h+='<span class="bracket-tile-flag">'+getFlag(m.team1)+'</span>';
+      h+='<span class="bracket-tile-name'+(isTBD1?' tbd':'')+'">'+(isTBD1?'TBD':m.team1)+'</span>';
+      if(o1)h+='<span class="bracket-tile-owner'+(isClash?' clash':'')+'">'+o1+'</span>';
+      if(m.status!=='scheduled'&&m.score1!==null)h+='<span class="bracket-tile-score">'+m.score1+'</span>';
       h+='</div>';
-      h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px'+(w2?';background:var(--gg-tint)':'')+'">';
-      h+='<span style="font-size:16px">'+getFlag(m.team2)+'</span>';
-      h+='<span style="font-size:13px;font-weight:'+(w2?700:400)+';color:var(--dark);flex:1">'+(isTBD?'TBD':m.team2)+'</span>';
-      if(o2)h+='<span style="font-size:9px;font-weight:600;color:'+(isClash?'var(--gg-dark)':'var(--muted)')+';background:'+(isClash?'var(--gg-tint)':'var(--subtle)')+';padding:1px 6px;border-radius:3px">'+o2+'</span>';
-      if(m.status!=='scheduled'&&m.score2!==null)h+='<span style="font-size:15px;font-weight:800;color:'+(w2?'var(--gg-dark)':'var(--faint)')+';min-width:20px;text-align:right">'+m.score2+'</span>';
+      h+='<div class="bracket-tile-team'+(w2?' winner':'')+'">';
+      h+='<span class="bracket-tile-flag">'+getFlag(m.team2)+'</span>';
+      h+='<span class="bracket-tile-name'+(isTBD2?' tbd':'')+'">'+(isTBD2?'TBD':m.team2)+'</span>';
+      if(o2)h+='<span class="bracket-tile-owner'+(isClash?' clash':'')+'">'+o2+'</span>';
+      if(m.status!=='scheduled'&&m.score2!==null)h+='<span class="bracket-tile-score">'+m.score2+'</span>';
       h+='</div>';
-      h+='<div style="display:flex;align-items:center;gap:6px;padding:4px 12px;background:var(--subtle);font-size:10px;color:var(--muted)">';
-      h+=(m.status==='finished'?(m.penaltyWinner?'FT (pens: '+m.penaltyWinner+')':'FT'):m.status==='live'?'LIVE':timeStr);
-      if(isClash)h+='<span style="background:var(--gg-tint);color:var(--gg-dark);padding:1px 6px;border-radius:3px;font-weight:600;margin-left:auto">QFP: '+o1+' vs '+o2+'</span>';
-      h+='</div></div>';
+      if(m.status==='finished'&&m.penaltyWinner)h+='<div class="bracket-tile-pens">Pens: '+m.penaltyWinner+'</div>';
+      h+='</div>';
     }
     h+='</div>';
   }
-  document.getElementById('tab-bracket').innerHTML=h||'<div class="loading">Knockout bracket coming soon</div>';
+  h+='</div></div>';
+  document.getElementById('tab-bracket').innerHTML=h;
 }
 
 var h2hPlayer1='';
