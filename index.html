@@ -313,6 +313,8 @@ function statusBar(){
   return '<div class="sb warn">Showing schedule - Live scores unavailable - <button onclick="refreshAll()" style="background:none;border:none;cursor:pointer;color:inherit;font-weight:700;font-family:inherit;font-size:inherit;text-decoration:underline">Refresh</button></div>';
 }
 
+var ELIMINATED_TEAMS=['Haiti','Turkey','Tunisia','Jordan','Panama','Czech Republic','Qatar','Curasao','Iraq','Uruguay','Saudi Arabia','New Zealand','Scotland','Uzbekistan','South Korea','Iran','South Africa','Japan','Germany','Netherlands'];
+
 function calcLeaderboard(){
   var pts={},w={},d={},l={},elim={};
   for(var i=0;i<SWEEPSTAKE.length;i++){pts[SWEEPSTAKE[i].owner]=0;w[SWEEPSTAKE[i].owner]=0;d[SWEEPSTAKE[i].owner]=0;l[SWEEPSTAKE[i].owner]=0;}
@@ -320,17 +322,11 @@ function calcLeaderboard(){
     var m=allMatches[i];
     if(m.status!=='finished'||m.score1===null||m.score2===null)continue;
     var o1=getOwner(m.team1),o2=getOwner(m.team2);
-    var isKnockout=m.stage!=='Group Stage';
-    if(m.score1>m.score2){if(o1){pts[o1]+=3;w[o1]++;}if(o2){l[o2]++;if(isKnockout)elim[m.team2]=true;}}
-    else if(m.score2>m.score1){if(o2){pts[o2]+=3;w[o2]++;}if(o1){l[o1]++;if(isKnockout)elim[m.team1]=true;}}
-    else{
-      if(o1){pts[o1]++;d[o1]++;}if(o2){pts[o2]++;d[o2]++;}
-      if(isKnockout&&m.penaltyWinner){
-        var loserTeam=m.penaltyWinner===m.team1?m.team2:m.team1;
-        elim[loserTeam]=true;
-      }
-    }
+    if(m.score1>m.score2){if(o1){pts[o1]+=3;w[o1]++;}if(o2){l[o2]++;}}
+    else if(m.score2>m.score1){if(o2){pts[o2]+=3;w[o2]++;}if(o1){l[o1]++;}}
+    else{if(o1){pts[o1]++;d[o1]++;}if(o2){pts[o2]++;d[o2]++;}}
   }
+  for(var i=0;i<ELIMINATED_TEAMS.length;i++)elim[ELIMINATED_TEAMS[i]]=true;
   return SWEEPSTAKE.map(function(e){return {owner:e.owner,teams:e.teams,pts:pts[e.owner]||0,wins:w[e.owner]||0,draws:d[e.owner]||0,losses:l[e.owner]||0,elim:elim};}).sort(function(a,b){return b.pts-a.pts||b.wins-a.wins;});
 }
 
