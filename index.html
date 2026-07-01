@@ -313,7 +313,7 @@ function statusBar(){
   return '<div class="sb warn">Showing schedule - Live scores unavailable - <button onclick="refreshAll()" style="background:none;border:none;cursor:pointer;color:inherit;font-weight:700;font-family:inherit;font-size:inherit;text-decoration:underline">Refresh</button></div>';
 }
 
-var ELIMINATED_TEAMS=['Haiti','Turkey','Tunisia','Jordan','Panama','Czech Republic','Qatar','Curasao','Iraq','Uruguay','Saudi Arabia','New Zealand','Scotland','Uzbekistan','South Korea','Iran','South Africa','Japan','Germany','Netherlands'];
+var ELIMINATED_TEAMS=['Haiti','Turkey','Tunisia','Jordan','Panama','Czech Republic','Qatar','Curasao','Iraq','Uruguay','Saudi Arabia','New Zealand','Scotland','Uzbekistan','South Korea','Iran','South Africa','Japan','Germany','Netherlands','Ivory Coast','Sweden'];
 
 function calcLeaderboard(){
   var pts={},w={},d={},l={},elim={};
@@ -947,8 +947,8 @@ var BASE_MATCHES=[
   {date:"2026-06-29",stage:"Round of 32",group:"",team1:"Brazil",team2:"Japan",score1:2,score2:1,status:"finished",utcDate:"2026-06-29T17:00:00Z"},
   {date:"2026-06-29",stage:"Round of 32",group:"",team1:"Germany",team2:"Paraguay",score1:1,score2:1,status:"finished",utcDate:"2026-06-29T20:30:00Z",penaltyWinner:"Paraguay"},
   {date:"2026-06-30",stage:"Round of 32",group:"",team1:"Netherlands",team2:"Morocco",score1:1,score2:1,status:"finished",utcDate:"2026-06-30T00:00:00Z",penaltyWinner:"Morocco"},
-  {date:"2026-06-30",stage:"Round of 32",group:"",team1:"Ivory Coast",team2:"Norway",score1:null,score2:null,status:"scheduled",utcDate:"2026-06-30T17:00:00Z"},
-  {date:"2026-06-30",stage:"Round of 32",group:"",team1:"France",team2:"Sweden",score1:null,score2:null,status:"scheduled",utcDate:"2026-06-30T21:00:00Z"},
+  {date:"2026-06-30",stage:"Round of 32",group:"",team1:"Ivory Coast",team2:"Norway",score1:1,score2:2,status:"finished",utcDate:"2026-06-30T17:00:00Z"},
+  {date:"2026-06-30",stage:"Round of 32",group:"",team1:"France",team2:"Sweden",score1:3,score2:0,status:"finished",utcDate:"2026-06-30T21:00:00Z"},
   {date:"2026-07-01",stage:"Round of 32",group:"",team1:"Mexico",team2:"Ecuador",score1:null,score2:null,status:"scheduled",utcDate:"2026-07-01T01:00:00Z"},
   {date:"2026-07-01",stage:"Round of 32",group:"",team1:"England",team2:"DR Congo",score1:null,score2:null,status:"scheduled",utcDate:"2026-07-01T16:00:00Z"},
   {date:"2026-07-01",stage:"Round of 32",group:"",team1:"Belgium",team2:"Senegal",score1:null,score2:null,status:"scheduled",utcDate:"2026-07-01T20:00:00Z"},
